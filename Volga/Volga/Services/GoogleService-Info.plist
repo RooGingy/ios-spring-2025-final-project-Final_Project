@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyDppBDmpzyJ-OslAJgRTgX49iksk5pA5Gk</string>
+	<string>AIzaSyA08l3ZaAJ84vu7AwoWkNg_ZwTFBWyt3_Q</string>
 	<key>GCM_SENDER_ID</key>
-	<string>299333091619</string>
+	<string>135951972015</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.austin.Volga-Ios</string>
 	<key>PROJECT_ID</key>
-	<string>volgabookstore</string>
+	<string>volga-bookstore</string>
 	<key>STORAGE_BUCKET</key>
-	<string>volgabookstore.firebasestorage.app</string>
+	<string>volga-bookstore.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:299333091619:ios:06f137352dc9eb924ecc96</string>
+	<string>1:135951972015:ios:5d83de11bf1b2c86ea065a</string>
 </dict>
 </plist>

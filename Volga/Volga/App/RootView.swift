@@ -8,9 +8,15 @@
 import SwiftUI
 
 struct RootView: View {
+	@State private var isLoggedIn = false // Track login state
+	
 	var body: some View {
 		NavigationStack {
-			LoginView()
+			if isLoggedIn {
+				Bookstore()
+			} else {
+				Login()
+			}
 		}
 	}
 }

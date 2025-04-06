@@ -1,5 +1,5 @@
 //
-//  NavbarView.swift
+//  Navbar.swift
 //  Volga
 //
 //  Created by Austin Moser on 3/31/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NavbarView: View {
+struct Navbar: View {
 	var body: some View {
 		HStack {
 			navButton(systemName: "house.fill", label: "Home")
@@ -22,12 +22,12 @@ struct NavbarView: View {
 		.padding(.vertical, 10)
 		.background(Color(.systemGray6))
 		.shadow(radius: 5)
-		.frame(maxWidth: .infinity)
 	}
 
 	private func navButton(systemName: String, label: String) -> some View {
 		Button(action: {
-			// Handle the action here ya lazy bastard
+			// Handle navigation action, for now, print the label
+			print("\(label) tapped")
 		}) {
 			VStack(spacing: 4) {
 				Image(systemName: systemName)
@@ -35,11 +35,10 @@ struct NavbarView: View {
 				Text(label)
 					.font(.caption2)
 			}
-			.foregroundColor(.blue)
 		}
 	}
 }
 
 #Preview {
-	NavbarView()
+	Navbar()
 }
