@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 class CreateAccountViewModel: ObservableObject {
 	@Published var firstName = ""
@@ -24,13 +25,13 @@ class CreateAccountViewModel: ObservableObject {
 
 		guard validateFields() else { return }
 
-		FirebaseAuthService.shared.createAccount(email: email, password: password) { [weak self] result in
+		Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
 			DispatchQueue.main.async {
-				switch result {
-				case .success:
-					onSuccess()
-				case .failure(let error):
+				if let error = error {
 					self?.errorMessage = error.localizedDescription
+				} else {
+					// Optionally: you could store/display user info here
+					onSuccess()
 				}
 			}
 		}
@@ -38,9 +39,10 @@ class CreateAccountViewModel: ObservableObject {
 
 	private func validateFields() -> Bool {
 		if firstName.trimmingCharacters(in: .whitespaces).isEmpty ||
-		   lastName.trimmingCharacters(in: .whitespaces).isEmpty ||
-		   email.trimmingCharacters(in: .whitespaces).isEmpty ||
-		   password.isEmpty || confirmPassword.isEmpty {
+			lastName.trimmingCharacters(in: .whitespaces).isEmpty ||
+			email.trimmingCharacters(in: .whitespaces).isEmpty ||
+			password.isEmpty || confirmPassword.isEmpty {
+			errorMessage = "All fields are required."
 			return false
 		}
 

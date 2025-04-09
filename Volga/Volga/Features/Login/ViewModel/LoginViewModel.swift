@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 class LoginViewModel: ObservableObject {
 	@Published var email = ""
@@ -33,13 +34,12 @@ class LoginViewModel: ObservableObject {
 			return
 		}
 
-		FirebaseAuthService.shared.login(email: email, password: password) { [weak self] result in
+		Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
 			DispatchQueue.main.async {
-				switch result {
-				case .success:
-					self?.navigateToBookstore = true
-				case .failure(let error):
+				if let error = error {
 					self?.errorMessage = error.localizedDescription
+				} else {
+					self?.navigateToBookstore = true
 				}
 			}
 		}

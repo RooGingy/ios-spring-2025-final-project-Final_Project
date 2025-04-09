@@ -16,12 +16,12 @@ class CatalogRepository: ObservableObject {
 	func fetchBooks() {
 		db.collection("books").getDocuments { snapshot, error in
 			if let error = error {
-				print("🔥 Error fetching books: \(error.localizedDescription)")
+				print("Error fetching books: \(error.localizedDescription)")
 				return
 			}
 
 			guard let documents = snapshot?.documents else {
-				print("⚠️ No books found.")
+				print("No books found.")
 				return
 			}
 
