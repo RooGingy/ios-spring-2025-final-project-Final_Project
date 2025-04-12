@@ -9,40 +9,50 @@ import SwiftUI
 
 struct Bookstore: View {
 	@StateObject private var catalog = CatalogRepository()
+	@StateObject private var searchViewModel = SearchBarViewModel(books: [])
 
 	var body: some View {
-		VStack {
-			// Bookstore Content
-			Text("Welcome to the Bookstore!")
-				.font(.title)
-				.padding()
-
-			if catalog.books.isEmpty {
-				// Show a loading indicator while fetching books
-				ProgressView("Loading books...")
-					.padding()
-			} else {
-				// Display the list of books when they are loaded
+		NavigationStack {
+			VStack(spacing: 0) {
 				ScrollView {
-					LazyVStack(spacing: 16) {
-						ForEach(catalog.books) { book in
-							BookCard(book: book) // Use the BookCard to display each book
+					VStack(spacing: 16) {
+						Text("Welcome to the Bookstore!")
+							.font(.title)
+							.padding(.top)
+
+						if catalog.books.isEmpty {
+							ProgressView("Loading books...")
+								.padding()
+						} else {
+							SearchBar(viewModel: searchViewModel)
+
+							LazyVStack(spacing: 16) {
+								ForEach(searchViewModel.filteredBooks) { book in
+									NavigationLink(destination: BookDetailView(book: book)) {
+										BookCard(book: book)
+									}
+									.buttonStyle(.plain)
+								}
+							}
+							.padding()
 						}
 					}
-					.padding(.horizontal)
-					.padding(.top)
 				}
-			}
 
-			// Navbar (if any additional navigation bar needed)
-			Navbar()
-		}
-		.onAppear {
-			catalog.fetchBooks() // Fetch books when the view appears
+				Navbar() // Static at the bottom
+			}
+			.onAppear {
+				catalog.fetchBooks()
+			}
+			.onChange(of: catalog.books) {
+				searchViewModel.updateBooks(catalog.books)
+			}
 		}
 	}
 }
 
 #Preview {
-	Bookstore()
+	NavigationStack {
+		Bookstore()
+	}
 }

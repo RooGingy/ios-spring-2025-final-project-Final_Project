@@ -8,15 +8,13 @@
 import Foundation
 import FirebaseFirestoreSwift
 
-// MARK: - Description Object (matches Firestore's nested map)
-struct BookDescription: Codable {
+struct BookDescription: Codable, Equatable {
 	let paragraph1: String
 	let paragraph2: String
 	let paragraph3: String
 }
 
-// MARK: - Book Model
-struct Book: Identifiable, Codable {
+struct Book: Identifiable, Codable, Equatable {
 	@DocumentID var id: String?
 
 	let title: String
@@ -34,10 +32,10 @@ struct Book: Identifiable, Codable {
 		case id
 		case title
 		case author
-		case genres = "genre" // Firestore key = "genre", model = "genres"
+		case genres = "genre"
 		case isbn
 		case description
-		case coverImage = "coverImage" // Firestore key = "coverImage"
+		case coverImage = "coverImage"
 		case rating
 		case price
 		case inStock

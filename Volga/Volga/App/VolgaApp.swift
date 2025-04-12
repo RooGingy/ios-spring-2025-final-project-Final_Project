@@ -22,6 +22,7 @@ struct VolgaApp: App {
 	var body: some Scene {
 		WindowGroup {
 			RootView()
+				.preferredColorScheme(.light)
 		}
 	}
 }
