@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseAuth
+import FirebaseFirestore
 
 class LoginViewModel: ObservableObject {
 	@Published var email = ""
@@ -38,8 +39,30 @@ class LoginViewModel: ObservableObject {
 			DispatchQueue.main.async {
 				if let error = error {
 					self?.errorMessage = error.localizedDescription
-				} else {
-					self?.navigateToBookstore = true
+				} else if let uid = authResult?.user.uid {
+					let db = Firestore.firestore()
+					let userRef = db.collection("users").document(uid)
+
+					userRef.getDocument { docSnapshot, _ in
+						if !(docSnapshot?.exists ?? false) {
+							// 🔁 Auto-create Firestore doc if missing
+							userRef.setData([
+								"userId": uid,
+								"email": self?.email ?? "",
+								"name": "New User"
+							]) { error in
+								if let error = error {
+									print("❌ Failed to create Firestore user doc: \(error.localizedDescription)")
+								} else {
+									print("✅ Firestore user document created on login.")
+								}
+							}
+						} else {
+							print("✅ Firestore user document already exists.")
+						}
+
+						self?.navigateToBookstore = true
+					}
 				}
 			}
 		}

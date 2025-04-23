@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseAuth
+import FirebaseFirestore
 
 class CreateAccountViewModel: ObservableObject {
 	@Published var firstName = ""
@@ -29,9 +30,21 @@ class CreateAccountViewModel: ObservableObject {
 			DispatchQueue.main.async {
 				if let error = error {
 					self?.errorMessage = error.localizedDescription
-				} else {
-					// Optionally: you could store/display user info here
-					onSuccess()
+				} else if let uid = authResult?.user.uid {
+					// Save user data to Firestore
+					let db = Firestore.firestore()
+					let userData: [String: Any] = [
+						"userId": uid,
+						"name": "\(self?.firstName ?? "") \(self?.lastName ?? "")",
+						"email": self?.email ?? ""
+					]
+					db.collection("users").document(uid).setData(userData) { err in
+						if let err = err {
+							self?.errorMessage = "Failed to save user: \(err.localizedDescription)"
+						} else {
+							onSuccess()
+						}
+					}
 				}
 			}
 		}

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct Login: View {
 	@StateObject private var viewModel = LoginViewModel()
@@ -48,9 +49,10 @@ struct Login: View {
 						PrimaryButton(title: "Login", backgroundColor: .teal, textColor: .black) {
 							withAnimation {
 								viewModel.login()
+								CurrentUserManager.shared.loadUser()
 							}
 						}
-
+						
 						PrimaryButton(title: "Create Account", backgroundColor: .teal, textColor: .black) {
 							viewModel.navigateToCreateAccount = true
 						}
@@ -66,10 +68,13 @@ struct Login: View {
 			}
 		}
 		.fullScreenCover(isPresented: $viewModel.navigateToBookstore) {
-			Bookstore()
+			BookstoreView()
 		}
 	}
 }
+
+
+
 
 #Preview {
 	Login()

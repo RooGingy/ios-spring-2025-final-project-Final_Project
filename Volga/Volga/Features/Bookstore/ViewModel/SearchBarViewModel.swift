@@ -13,13 +13,17 @@ class SearchBarViewModel: ObservableObject {
 	@Published private(set) var allBooks: [Book] = []
 	@Published var filteredBooks: [Book] = []
 
+	var queryActive: Bool {
+		!query.trimmingCharacters(in: .whitespaces).isEmpty
+	}
+
 	init(books: [Book]) {
 		updateBooks(books)
 	}
 
 	func updateBooks(_ books: [Book]) {
 		self.allBooks = books
-		self.filterBooks()
+		filterBooks()
 	}
 
 	func filterBooks() {
