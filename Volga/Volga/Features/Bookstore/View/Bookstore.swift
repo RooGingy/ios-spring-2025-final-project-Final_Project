@@ -1,5 +1,5 @@
 //
-//  BookstoreView.swift
+//  Bookstore.swift
 //  Volga
 //
 //  Created by Austin Moser on 4/6/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct BookstoreView: View {
+struct Bookstore: View {
 	@StateObject private var viewModel = BookstoreViewModel()
 
 	var body: some View {

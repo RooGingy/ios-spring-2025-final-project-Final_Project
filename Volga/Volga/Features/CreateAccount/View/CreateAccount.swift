@@ -1,5 +1,5 @@
 //
-//  CreateAccount.swift
+//  Login.swift
 //  Volga
 //
 //  Created by Austin Moser on 3/31/25.
@@ -24,11 +24,45 @@ struct CreateAccount: View {
 							.font(.title.bold())
 							.padding(.bottom, 10)
 
-						InputField(isSecure: false, placeholder: "First Name", text: $viewModel.firstName, showText: .constant(false), showError: viewModel.showErrors)
-						InputField(isSecure: false, placeholder: "Last Name", text: $viewModel.lastName, showText: .constant(false), showError: viewModel.showErrors)
-						InputField(isSecure: false, placeholder: "Email", text: $viewModel.email, showText: .constant(false), showError: viewModel.showErrors)
-						InputField(isSecure: true, placeholder: "Password", text: $viewModel.password, showText: $viewModel.showPassword, showError: viewModel.showErrors)
-						InputField(isSecure: true, placeholder: "Confirm Password", text: $viewModel.confirmPassword, showText: $viewModel.showConfirmPassword, showError: viewModel.showErrors)
+						InputField(
+							isSecure: false,
+							placeholder: "First Name",
+							text: $viewModel.firstName,
+							showText: .constant(false),
+							showError: viewModel.showErrors
+						)
+
+						InputField(
+							isSecure: false,
+							placeholder: "Last Name",
+							text: $viewModel.lastName,
+							showText: .constant(false),
+							showError: viewModel.showErrors
+						)
+
+						InputField(
+							isSecure: false,
+							placeholder: "Email",
+							text: $viewModel.email,
+							showText: .constant(false),
+							showError: viewModel.showErrors
+						)
+
+						InputField(
+							isSecure: true,
+							placeholder: "Password",
+							text: $viewModel.password,
+							showText: $viewModel.showPassword,
+							showError: viewModel.showErrors
+						)
+
+						InputField(
+							isSecure: true,
+							placeholder: "Confirm Password",
+							text: $viewModel.confirmPassword,
+							showText: $viewModel.showConfirmPassword,
+							showError: viewModel.showErrors
+						)
 
 						if let error = viewModel.errorMessage {
 							Text(error)
@@ -38,7 +72,12 @@ struct CreateAccount: View {
 								.padding(.horizontal)
 						}
 
-						PrimaryButton(title: "Create Account", backgroundColor: .teal, textColor: .black) {
+						CustomButton(
+							title: "Create Account",
+							icon: nil,
+							bgColor: .teal,
+							fgColor: .black
+						) {
 							withAnimation {
 								viewModel.createAccount {
 									CurrentUserManager.shared.loadUser()
@@ -56,11 +95,10 @@ struct CreateAccount: View {
 			.navigationBarTitleDisplayMode(.inline)
 		}
 		.fullScreenCover(isPresented: $navigateToBookstore) {
-			BookstoreView()
+			Bookstore()
 		}
 	}
 }
-
 
 #Preview {
 	CreateAccount()

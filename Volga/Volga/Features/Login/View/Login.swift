@@ -46,14 +46,24 @@ struct Login: View {
 								.padding(.horizontal)
 						}
 
-						PrimaryButton(title: "Login", backgroundColor: .teal, textColor: .black) {
+						CustomButton(
+							title: "Login",
+							icon: nil,
+							bgColor: .teal,
+							fgColor: .black
+						) {
 							withAnimation {
 								viewModel.login()
 								CurrentUserManager.shared.loadUser()
 							}
 						}
-						
-						PrimaryButton(title: "Create Account", backgroundColor: .teal, textColor: .black) {
+
+						CustomButton(
+							title: "Create Account",
+							icon: nil,
+							bgColor: .teal,
+							fgColor: .black
+						) {
 							viewModel.navigateToCreateAccount = true
 						}
 					}
@@ -68,13 +78,10 @@ struct Login: View {
 			}
 		}
 		.fullScreenCover(isPresented: $viewModel.navigateToBookstore) {
-			BookstoreView()
+			Bookstore()
 		}
 	}
 }
-
-
-
 
 #Preview {
 	Login()

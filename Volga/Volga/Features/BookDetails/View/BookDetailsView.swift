@@ -1,10 +1,3 @@
-//
-//  BookDetailsView.swift
-//  Volga
-//
-//  Created by Austin Moser on 4/12/25.
-//
-
 import SwiftUI
 
 struct BookDetailsView: View {
@@ -33,9 +26,21 @@ struct BookDetailsView: View {
 					}
 
 					VStack(spacing: 8) {
-						Text(viewModel.book.title).font(.title).fontWeight(.bold).multilineTextAlignment(.center)
-						Text("by \(viewModel.book.author)").font(.subheadline).foregroundColor(.secondary)
-						Text(viewModel.book.genres).font(.callout).padding(.horizontal, 10).padding(.vertical, 4).background(Color.blue.opacity(0.1)).cornerRadius(8)
+						Text(viewModel.book.title)
+							.font(.title)
+							.fontWeight(.bold)
+							.multilineTextAlignment(.center)
+
+						Text("by \(viewModel.book.author)")
+							.font(.subheadline)
+							.foregroundColor(.secondary)
+
+						Text(viewModel.book.genres)
+							.font(.callout)
+							.padding(.horizontal, 10)
+							.padding(.vertical, 4)
+							.background(Color.blue.opacity(0.1))
+							.cornerRadius(8)
 					}
 
 					LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
@@ -53,7 +58,7 @@ struct BookDetailsView: View {
 							viewModel.toggleWishlist()
 						}
 
-						AddToCartButton(book: viewModel.book, quantity: $viewModel.quantity) {
+						AddToCartButton(available: viewModel.book.onHand, quantity: $viewModel.quantity) {
 							// Add to cart Firestore update
 						}
 
@@ -61,7 +66,9 @@ struct BookDetailsView: View {
 							// Handle checkout
 						}
 
-						SeeReviewsButton(book: viewModel.book)
+						SeeReviewsButton {
+							// Navigate to reviews view manually if needed
+						}
 					}
 
 					VStack(alignment: .leading, spacing: 10) {
@@ -81,5 +88,3 @@ struct BookDetailsView: View {
 		}
 	}
 }
-
-
