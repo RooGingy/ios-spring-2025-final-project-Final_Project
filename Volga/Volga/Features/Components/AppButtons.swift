@@ -73,7 +73,7 @@ struct CartButton: View {
 
 	var body: some View {
 		Button(action: onCheckout) {
-			Label("Go to Checkout", systemImage: "creditcard")
+			Label("Go to Cart", systemImage: "cart")
 				.frame(maxWidth: .infinity)
 				.padding()
 				.background(Color("SoftGreen"))

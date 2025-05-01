@@ -11,6 +11,7 @@ struct BookDetailsView: View {
     @StateObject private var viewModel: BookDetailViewModel
     @StateObject private var currentUser = CurrentUserManager.shared
     @State private var showReviews = false
+    @State private var showCart = false // NEW
 
     init(book: Book) {
         _viewModel = StateObject(wrappedValue: BookDetailViewModel(book: book))
@@ -80,7 +81,7 @@ struct BookDetailsView: View {
                             }
 
                             CartButton {
-                                // Handle checkout
+                                showCart = true // NEW
                             }
 
                             SeeReviewsButton {
@@ -118,6 +119,9 @@ struct BookDetailsView: View {
         }
         .navigationDestination(isPresented: $showReviews) {
             BookReviewsView(book: viewModel.book)
+        }
+        .navigationDestination(isPresented: $showCart) {
+            CartView()
         }
     }
 }
