@@ -10,6 +10,7 @@ import SwiftUI
 struct BookDetailsView: View {
     @StateObject private var viewModel: BookDetailViewModel
     @StateObject private var currentUser = CurrentUserManager.shared
+    @State private var showReviews = false
 
     init(book: Book) {
         _viewModel = StateObject(wrappedValue: BookDetailViewModel(book: book))
@@ -26,10 +27,10 @@ struct BookDetailsView: View {
                                 ProgressView().frame(width: 180, height: 260)
                             case .success(let image):
                                 image.resizable()
-                                     .scaledToFit()
-                                     .frame(width: 180, height: 260)
-                                     .cornerRadius(12)
-                                     .shadow(radius: 5)
+                                    .scaledToFit()
+                                    .frame(width: 180, height: 260)
+                                    .cornerRadius(12)
+                                    .shadow(radius: 5)
                             case .failure:
                                 Image(systemName: "book.closed")
                                     .resizable()
@@ -78,12 +79,12 @@ struct BookDetailsView: View {
                                 viewModel.addToCart()
                             }
 
-                            CheckoutButton {
+                            CartButton {
                                 // Handle checkout
                             }
 
                             SeeReviewsButton {
-                                // Navigate to reviews view manually if needed
+                                showReviews = true
                             }
                         }
 
@@ -99,11 +100,10 @@ struct BookDetailsView: View {
                 }
             }
 
-            // Snackbar Overlay
             if viewModel.showSnackbar {
                 VStack {
                     Spacer()
-                    SnackbarView(message: "Added to cart")
+                    SnackbarView(message: viewModel.quantity == 0 ? "Removed from cart" : "Added to cart")
                 }
                 .transition(.opacity)
                 .animation(.easeInOut, value: viewModel.showSnackbar)
@@ -113,6 +113,11 @@ struct BookDetailsView: View {
         .onAppear {
             currentUser.loadUser()
             viewModel.checkIfInWishlist()
+            viewModel.quantity = 0
+            viewModel.loadQuantityFromCart()
+        }
+        .navigationDestination(isPresented: $showReviews) {
+            BookReviewsView(book: viewModel.book)
         }
     }
 }

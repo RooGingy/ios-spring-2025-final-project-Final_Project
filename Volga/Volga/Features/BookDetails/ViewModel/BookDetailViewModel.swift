@@ -66,27 +66,76 @@ class BookDetailViewModel: ObservableObject {
         }
     }
 
+    func loadQuantityFromCart() {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        let db = Firestore.firestore()
+        let cartRef = db.collection("users").document(userId).collection("cart").document(book.id!)
+
+        cartRef.getDocument { snapshot, error in
+            if let error = error {
+                print("Error loading quantity from cart: \(error.localizedDescription)")
+                return
+            }
+
+            if let data = snapshot?.data(),
+               let savedQty = data["quantity"] as? Int {
+                self.quantity = savedQty
+            }
+        }
+    }
+
     func addToCart() {
         guard let userId = Auth.auth().currentUser?.uid else { return }
         let db = Firestore.firestore()
         let cartRef = db.collection("users").document(userId).collection("cart").document(book.id!)
 
-        cartRef.setData([
-            "title": book.title,
-            "author": book.author,
-            "coverImage": book.coverImage,
-            "price": book.price,
-            "isbn": book.isbn,
-            "quantity": quantity
-        ]) { error in
-            if let error = error {
-                print("Error adding to cart: \(error.localizedDescription)")
-            } else {
-                self.showSnackbar = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-                    self.showSnackbar = false
+        if quantity == 0 {
+            // Remove from cart
+            cartRef.delete { error in
+                if let error = error {
+                    print("Error removing from cart: \(error.localizedDescription)")
+                } else {
+                    self.showSnackbar = true
                 }
             }
+        } else {
+            // Add or update quantity
+            cartRef.setData([
+                "title": book.title,
+                "author": book.author,
+                "coverImage": book.coverImage,
+                "price": book.price,
+                "isbn": book.isbn,
+                "quantity": quantity
+            ]) { error in
+                if let error = error {
+                    print("Error adding to cart: \(error.localizedDescription)")
+                } else {
+                    self.showSnackbar = true
+                }
+            }
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            self.showSnackbar = false
+        }
+    }
+
+    func removeFromCart() {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        let db = Firestore.firestore()
+        let cartRef = db.collection("users").document(userId).collection("cart").document(book.id!)
+
+        cartRef.delete { error in
+            if let error = error {
+                print("Error removing from cart: \(error.localizedDescription)")
+            } else {
+                self.showSnackbar = true
+            }
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            self.showSnackbar = false
         }
     }
 
@@ -97,8 +146,10 @@ class BookDetailViewModel: ObservableObject {
     }
 
     func decrementQuantity() {
-        if quantity > 1 {
+        if quantity > 0 {
             quantity -= 1
+        } else if quantity == 0 {
+            quantity = 0
         }
     }
 }

@@ -13,78 +13,62 @@ struct AddToCartButton: View {
     @Binding var quantity: Int
     let onAdd: () -> Void
 
-    @State private var showQuantitySelector = false
-
     var body: some View {
-        VStack {
-            if showQuantitySelector {
-                HStack(spacing: 12) {
-                    // Quantity controls
-                    HStack {
-                        Button(action: {
-                            if quantity == 1 {
-                                showQuantitySelector = false
-                            } else {
-                                quantity -= 1
-                            }
-                        }) {
-                            Image(systemName: "minus")
-                                .font(.title2)
-                                .frame(width: 32, height: 32)
-                        }
-                        .opacity(quantity <= 1 ? 0.5 : 1)
-
-                        Text("Qty: \(quantity)")
-                            .font(.headline)
-                            .frame(minWidth: 60)
-
-                        Button(action: {
-                            if quantity < available {
-                                quantity += 1
-                            }
-                        }) {
-                            Image(systemName: "plus")
-                                .font(.title2)
-                                .frame(width: 32, height: 32)
-                        }
-                        .disabled(quantity >= available)
-                        .opacity(quantity >= available ? 0.5 : 1)
-                    }
-
-                    Spacer()
-
-                    // Add to Cart button inside the bar
-                    Button(action: onAdd) {
-                        Text("Add to Cart")
-                            .fontWeight(.semibold)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 8)
-                            .background(Color("SoftTealBlue"))
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
-                    }
-                }
-                .padding()
-                .background(Color("SoftTealBlue").opacity(0.15))
-                .cornerRadius(12)
-            } else {
+        VStack(spacing: 16) {
+            // Quantity selector row
+            HStack {
                 Button(action: {
-                    showQuantitySelector = true
+                    if quantity > 0 {
+                        quantity -= 1
+                    }
                 }) {
-                    Label("Add to Cart", systemImage: "cart.fill.badge.plus")
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color("SoftTealBlue"))
-                        .foregroundColor(.white)
-                        .cornerRadius(12)
+                    Image(systemName: "minus")
+                        .font(.title2)
+                        .frame(width: 44, height: 44)
                 }
+                .opacity(quantity <= 1 ? 0.5 : 1)
+
+                Spacer()
+
+                Text("Qty: \(quantity)")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .multilineTextAlignment(.center)
+
+                Spacer()
+
+                Button(action: {
+                    if quantity < available {
+                        quantity += 1
+                    }
+                }) {
+                    Image(systemName: "plus")
+                        .font(.title2)
+                        .frame(width: 44, height: 44)
+                }
+                .opacity(quantity >= available ? 0.5 : 1)
+                .disabled(quantity >= available)
+            }
+
+            // Full-width Add to Cart button
+            Button(action: onAdd) {
+                Label("Add to Cart", systemImage: "cart.fill.badge.plus")
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color("SoftTealBlue"))
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
             }
         }
+        .padding()
+        .background(Color("SoftTealBlue").opacity(0.15))
+        .cornerRadius(12)
     }
 }
-// MARK: - CheckoutButton
-struct CheckoutButton: View {
+
+// MARK: - CartButton
+struct CartButton: View {
 	let onCheckout: () -> Void
 
 	var body: some View {

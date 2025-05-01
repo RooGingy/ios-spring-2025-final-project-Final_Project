@@ -17,19 +17,17 @@ struct MainTabView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Switch between screens based on tab
             switch selectedTab {
             case .home:
                 Bookstore()
             case .cart:
-                Text("Cart View Placeholder") // Replace with CartView()
+                CartView() // ✅ Use the cart view here
             case .wishlist:
-                WishlistView() // No need to pass selectedTab here
+                WishlistView()
             case .orders:
-                Text("Orders View Placeholder") // Replace with OrdersView()
+                Text("Orders Placeholder") // Replace with OrdersView later
             }
 
-            // Only MainTabView owns the tab binding
             Navbar(selectedTab: $selectedTab)
         }
     }
