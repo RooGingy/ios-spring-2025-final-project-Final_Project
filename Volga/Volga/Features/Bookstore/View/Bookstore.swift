@@ -51,10 +51,7 @@ struct Bookstore: View {
 						.padding()
 					}
 				}
-
-				Navbar()
 			}
-			.navigationTitle("Bookstore")
 			.navigationBarTitleDisplayMode(.inline)
 			.onAppear {
 				viewModel.loadInitialBooksIfNeeded()

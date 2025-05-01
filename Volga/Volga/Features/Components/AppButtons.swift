@@ -9,72 +9,80 @@ import SwiftUI
 
 // MARK: - AddToCartButton
 struct AddToCartButton: View {
-	let available: Int
-	@Binding var quantity: Int
-	let onAdd: () -> Void
+    let available: Int
+    @Binding var quantity: Int
+    let onAdd: () -> Void
 
-	@State private var showQuantitySelector = false
+    @State private var showQuantitySelector = false
 
-	var body: some View {
-		Group {
-			if showQuantitySelector {
-				HStack {
-					Button(action: {
-						if quantity == 1 {
-							showQuantitySelector = false
-						} else {
-							quantity -= 1
-						}
-					}) {
-						Image(systemName: "minus")
-							.font(.title2)
-							.frame(width: 44, height: 44)
-					}
-					.opacity(quantity <= 1 ? 0.5 : 1)
+    var body: some View {
+        VStack {
+            if showQuantitySelector {
+                HStack(spacing: 12) {
+                    // Quantity controls
+                    HStack {
+                        Button(action: {
+                            if quantity == 1 {
+                                showQuantitySelector = false
+                            } else {
+                                quantity -= 1
+                            }
+                        }) {
+                            Image(systemName: "minus")
+                                .font(.title2)
+                                .frame(width: 32, height: 32)
+                        }
+                        .opacity(quantity <= 1 ? 0.5 : 1)
 
-					Spacer()
+                        Text("Qty: \(quantity)")
+                            .font(.headline)
+                            .frame(minWidth: 60)
 
-					Text("Qty: \(quantity)")
-						.font(.headline)
-						.frame(maxWidth: .infinity)
-						.multilineTextAlignment(.center)
+                        Button(action: {
+                            if quantity < available {
+                                quantity += 1
+                            }
+                        }) {
+                            Image(systemName: "plus")
+                                .font(.title2)
+                                .frame(width: 32, height: 32)
+                        }
+                        .disabled(quantity >= available)
+                        .opacity(quantity >= available ? 0.5 : 1)
+                    }
 
-					Spacer()
+                    Spacer()
 
-					Button(action: {
-						if quantity < available {
-							quantity += 1
-						}
-					}) {
-						Image(systemName: "plus")
-							.font(.title2)
-							.frame(width: 44, height: 44)
-					}
-					.disabled(quantity >= available)
-					.opacity(quantity >= available ? 0.5 : 1)
-				}
-				.padding()
-				.background(Color("SoftTealBlue").opacity(0.15))
-				.foregroundColor(.blue)
-				.cornerRadius(12)
-			} else {
-				Button(action: {
-					onAdd()
-					showQuantitySelector = true
-				}) {
-					Label("Add to Cart", systemImage: "cart.fill.badge.plus")
-						.fontWeight(.semibold)
-						.frame(maxWidth: .infinity)
-						.padding()
-						.background(Color("SoftTealBlue"))
-						.foregroundColor(.white)
-						.cornerRadius(12)
-				}
-			}
-		}
-	}
+                    // Add to Cart button inside the bar
+                    Button(action: onAdd) {
+                        Text("Add to Cart")
+                            .fontWeight(.semibold)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(Color("SoftTealBlue"))
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
+                }
+                .padding()
+                .background(Color("SoftTealBlue").opacity(0.15))
+                .cornerRadius(12)
+            } else {
+                Button(action: {
+                    showQuantitySelector = true
+                }) {
+                    Label("Add to Cart", systemImage: "cart.fill.badge.plus")
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color("SoftTealBlue"))
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                }
+            }
+        }
+    }
 }
-
 // MARK: - CheckoutButton
 struct CheckoutButton: View {
 	let onCheckout: () -> Void

@@ -17,10 +17,10 @@ struct RootView: View {
 			if !hasCheckedAuth {
 				ProgressView("Checking login...")
 			} else if isLoggedIn {
-				Bookstore()
-					.onAppear {
-						CurrentUserManager.shared.loadUser()
-					}
+                MainTabView()
+                    .onAppear {
+                        CurrentUserManager.shared.loadUser()
+                    }
 			} else {
 				Login()
 			}
