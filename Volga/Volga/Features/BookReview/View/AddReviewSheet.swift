@@ -16,7 +16,7 @@ struct AddReviewSheet: View {
 	@StateObject private var reviewVM: ReviewViewModel
 
 	init(bookId: String, onSubmit: @escaping () -> Void) {
-		self.bookId = bookId
+       	self.bookId = bookId
 		self.onSubmit = onSubmit
 		_reviewVM = StateObject(wrappedValue: ReviewViewModel(bookId: bookId))
 	}

@@ -11,6 +11,7 @@ struct CartView: View {
     @StateObject private var viewModel = CartViewModel()
     @State private var selectedBook: Book?
     @State private var showBookDetails = false
+    @State private var comingFromCart = false
 
     var body: some View {
         NavigationStack {
@@ -35,6 +36,7 @@ struct CartView: View {
                                         quantity: item.quantity,
                                         onEdit: {
                                             selectedBook = item.book
+                                            comingFromCart = true
                                             showBookDetails = true
                                         },
                                         onRemove: {
@@ -43,7 +45,7 @@ struct CartView: View {
                                     )
                                 }
                             }
-                            .padding(.horizontal)
+                            .padding()
                         }
                     }
                     .padding(.bottom)
@@ -61,7 +63,7 @@ struct CartView: View {
                         }
 
                         Button("Proceed to Checkout") {
-                            // Checkout action
+                            // Handle checkout
                         }
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -79,8 +81,8 @@ struct CartView: View {
                 viewModel.loadCart()
             }
             .navigationDestination(isPresented: $showBookDetails) {
-                if let selectedBook = selectedBook {
-                    BookDetailsView(book: selectedBook)
+                if let book = selectedBook {
+                    BookDetailsView(book: book, fromCart: comingFromCart)
                 }
             }
         }

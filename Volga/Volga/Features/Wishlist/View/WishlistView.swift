@@ -3,13 +3,15 @@
 //  Volga
 //
 //  Created by Austin Moser on 4/30/25.
-//
-
+//`
 
 import SwiftUI
+import FirebaseFirestore
 
 struct WishlistView: View {
     @StateObject private var viewModel = WishlistViewModel()
+    @State private var selectedBook: Book? = nil
+    @State private var showDetails = false
 
     var body: some View {
         NavigationStack {
@@ -20,29 +22,49 @@ struct WishlistView: View {
                             .font(.title)
                             .padding(.top)
 
-                        if viewModel.isLoading {
-                            ProgressView("Loading wishlist...").padding()
-                        } else if viewModel.wishlistBooks.isEmpty {
-                            Text("You have no books in your wishlist.")
-                                .foregroundColor(.gray)
+                        if viewModel.wishlistBooks.isEmpty {
+                            Text("No books in your wishlist yet.")
+                                .foregroundColor(.secondary)
                                 .padding()
-                        } else {
-                            LazyVStack(spacing: 16) {
-                                ForEach(viewModel.wishlistBooks) { book in
-                                    NavigationLink(destination: BookDetailsView(book: book)) {
-                                        BookCard(book: book)
+                        }
+
+                        LazyVStack(spacing: 16) {
+                            ForEach(viewModel.wishlistBooks, id: \.id) { book in
+                                ZStack(alignment: .topTrailing) {
+                                    // Whole card is tappable
+                                    BookCard(book: book)
+                                        .onTapGesture {
+                                            selectedBook = book
+                                            showDetails = true
+                                        }
+
+                                    // Trash icon
+                                    Button(action: {
+                                        viewModel.removeBookFromWishlist(book)
+                                    }) {
+                                        Image(systemName: "trash")
+                                            .foregroundColor(.red)
+                                            .padding(10)
+                                            .background(Color.white)
+                                            .clipShape(Circle())
+                                            .shadow(radius: 1)
                                     }
-                                    .buttonStyle(.plain)
+                                    .padding(10)
                                 }
                             }
-                            .padding()
                         }
+                        .padding()
                     }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 viewModel.loadWishlist()
+            }
+            .navigationDestination(isPresented: $showDetails) {
+                if let book = selectedBook {
+                    BookDetailsView(book: book)
+                }
             }
         }
     }

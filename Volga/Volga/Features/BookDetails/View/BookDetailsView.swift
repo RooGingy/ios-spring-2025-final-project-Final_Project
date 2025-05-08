@@ -5,16 +5,26 @@
 //  Created by Austin Moser on 4/12/25.
 //
 
+//
+//  BookDetailsView.swift
+//  Volga
+//
+//  Created by Austin Moser on 4/12/25.
+//
+
 import SwiftUI
 
 struct BookDetailsView: View {
     @StateObject private var viewModel: BookDetailViewModel
     @StateObject private var currentUser = CurrentUserManager.shared
     @State private var showReviews = false
-    @State private var showCart = false // NEW
+    @State private var showCart = false
 
-    init(book: Book) {
+    var fromCart: Bool = false  // ✅ NEW
+
+    init(book: Book, fromCart: Bool = false) {
         _viewModel = StateObject(wrappedValue: BookDetailViewModel(book: book))
+        self.fromCart = fromCart
     }
 
     var body: some View {
@@ -22,6 +32,7 @@ struct BookDetailsView: View {
             VStack(spacing: 0) {
                 ScrollView {
                     VStack(alignment: .center, spacing: 20) {
+
                         AsyncImage(url: URL(string: viewModel.book.coverImage)) { phase in
                             switch phase {
                             case .empty:
@@ -81,7 +92,7 @@ struct BookDetailsView: View {
                             }
 
                             CartButton {
-                                showCart = true // NEW
+                                showCart = true
                             }
 
                             SeeReviewsButton {

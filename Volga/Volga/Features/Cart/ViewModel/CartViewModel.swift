@@ -5,10 +5,10 @@
 //  Created by Austin Moser on 4/30/25.
 //
 
-
 import Foundation
 import FirebaseFirestore
 import FirebaseAuth
+import FirebaseFirestoreSwift
 
 class CartViewModel: ObservableObject {
     struct CartItem {
@@ -32,7 +32,6 @@ class CartViewModel: ObservableObject {
 
         cartRef.getDocuments { snapshot, error in
             self.isLoading = false
-
             if let error = error {
                 print("Error loading cart: \(error.localizedDescription)")
                 return
@@ -40,44 +39,58 @@ class CartViewModel: ObservableObject {
 
             guard let documents = snapshot?.documents else { return }
 
-            self.cartItems = documents.compactMap { doc in
-                let data = doc.data()
+            var loadedItems: [CartItem] = []
+            let group = DispatchGroup()
 
-                // If any required field is missing, skip
-                guard let title = data["title"] as? String,
-                      let author = data["author"] as? String,
-                      let coverImage = data["coverImage"] as? String,
-                      let price = data["price"] as? Double,
-                      let isbn = data["isbn"] as? String,
+            for doc in documents {
+                let data = doc.data()
+                guard let isbn = data["isbn"] as? String,
                       let quantity = data["quantity"] as? Int else {
-                    return nil
+                    continue
                 }
 
-                let book = Book(
-                    id: doc.documentID,
-                    title: title,
-                    author: author,
-                    genres: "", // optional if not stored
-                    isbn: isbn,
-                    description: BookDescription(paragraph1: "", paragraph2: "", paragraph3: ""),
-                    coverImage: coverImage,
-                    rating: 0.0,
-                    price: price,
-                    inStock: true,
-                    onHand: 0
-                )
+                group.enter()
+                db.collection("books")
+                    .whereField("isbn", isEqualTo: isbn)
+                    .getDocuments { result, _ in
+                        if let bookDoc = result?.documents.first,
+                           let book = try? bookDoc.data(as: Book.self) {
+                            loadedItems.append(CartItem(book: book, quantity: quantity))
+                        }
+                        group.leave()
+                    }
+            }
 
-                return CartItem(book: book, quantity: quantity)
+            group.notify(queue: .main) {
+                self.cartItems = loadedItems
             }
         }
     }
-    
+
+    func addToCart(book: Book, quantity: Int) {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+
+        let db = Firestore.firestore()
+        let cartRef = db.collection("users").document(userId).collection("cart")
+
+        // Use ISBN as identifier to ensure unique entries
+        cartRef.document(book.id ?? UUID().uuidString).setData([
+            "isbn": book.isbn,
+            "quantity": quantity
+        ]) { error in
+            if let error = error {
+                print("Error adding to cart: \(error.localizedDescription)")
+            } else {
+                self.loadCart()
+            }
+        }
+    }
+
     func removeFromCart(bookId: String) {
         guard let userId = Auth.auth().currentUser?.uid else { return }
-        let db = Firestore.firestore()
-        let cartRef = db.collection("users").document(userId).collection("cart").document(bookId)
 
-        cartRef.delete { error in
+        let db = Firestore.firestore()
+        db.collection("users").document(userId).collection("cart").document(bookId).delete { error in
             if let error = error {
                 print("Error removing from cart: \(error.localizedDescription)")
             } else {
