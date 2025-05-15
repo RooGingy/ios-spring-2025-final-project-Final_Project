@@ -48,9 +48,12 @@ struct OrderDetailView: View {
                         .frame(width: 60, height: 90)
                         .cornerRadius(8)
 
-                        VStack(alignment: .leading) {
-                            Text("Book ID: \(book.id)")
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(book.title)
+                                .font(.headline)
                             Text("Quantity: \(book.quantity)")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
                         }
                     }
                 }

@@ -27,5 +27,6 @@ struct Order: Identifiable {
 struct OrderBookItem: Identifiable {
     let id: String
     let coverURL: String
+    let title: String
     let quantity: Int
 }

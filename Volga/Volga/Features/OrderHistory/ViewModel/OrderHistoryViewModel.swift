@@ -59,6 +59,7 @@ class OrderHistoryViewModel: ObservableObject {
                         return OrderBookItem(
                             id: itemDoc.documentID,
                             coverURL: data["coverImage"] as? String ?? "",
+                            title: data["title"] as? String ?? "",
                             quantity: data["quantity"] as? Int ?? 1
                         )
                     }
