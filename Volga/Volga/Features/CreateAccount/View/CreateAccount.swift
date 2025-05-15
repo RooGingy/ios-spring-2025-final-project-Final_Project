@@ -95,7 +95,7 @@ struct CreateAccount: View {
 			.navigationBarTitleDisplayMode(.inline)
 		}
 		.fullScreenCover(isPresented: $navigateToBookstore) {
-			Bookstore()
+            Bookstore()
 		}
 	}
 }

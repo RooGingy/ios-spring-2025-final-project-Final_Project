@@ -78,7 +78,7 @@ struct Login: View {
 			}
 		}
 		.fullScreenCover(isPresented: $viewModel.navigateToBookstore) {
-			Bookstore()
+            Bookstore()
 		}
 	}
 }

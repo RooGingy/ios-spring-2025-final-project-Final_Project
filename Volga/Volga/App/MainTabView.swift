@@ -21,11 +21,11 @@ struct MainTabView: View {
             case .home:
                 Bookstore()
             case .cart:
-                CartView() // ✅ Use the cart view here
+                CartView()
             case .wishlist:
                 WishlistView()
             case .orders:
-                Text("Orders Placeholder") // Replace with OrdersView later
+                OrderHistoryView() // 👈 Replaced placeholder with real view
             }
 
             Navbar(selectedTab: $selectedTab)
