@@ -9,20 +9,24 @@ import SwiftUI
 import Firebase
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-		FirebaseApp.configure()
-		return true
-	}
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        FirebaseApp.configure()
+        return true
+    }
 }
 
 @main
 struct VolgaApp: App {
-	@UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
-	var body: some Scene {
-		WindowGroup {
-			RootView()
-				.preferredColorScheme(.light)
-		}
-	}
+    // ✅ Track the current signed-in user
+    @StateObject private var currentUser = CurrentUserManager.shared
+
+    var body: some Scene {
+        WindowGroup {
+            RootView()
+                .environmentObject(currentUser) // ✅ Inject it into the whole app
+                .preferredColorScheme(.light)
+        }
+    }
 }

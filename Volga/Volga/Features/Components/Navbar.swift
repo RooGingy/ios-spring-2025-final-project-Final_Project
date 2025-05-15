@@ -12,6 +12,8 @@ struct Navbar: View {
             navButton(systemName: "heart.text.square.fill", label: "Wishlist", tab: .wishlist)
             Spacer()
             navButton(systemName: "clock.arrow.circlepath", label: "Orders", tab: .orders)
+            Spacer()
+            navButton(systemName: "person.crop.circle", label: "Profile", tab: .profile)
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 10)

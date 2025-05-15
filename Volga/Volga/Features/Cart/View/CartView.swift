@@ -76,7 +76,6 @@ struct CartView: View {
                     .background(Color(.systemGray6))
                 }
             }
-            .navigationTitle("Cart")
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 viewModel.loadCart()

@@ -5,22 +5,15 @@
 //  Created by Austin Moser on 4/12/25.
 //
 
-//
-//  BookDetailsView.swift
-//  Volga
-//
-//  Created by Austin Moser on 4/12/25.
-//
-
 import SwiftUI
 
 struct BookDetailsView: View {
     @StateObject private var viewModel: BookDetailViewModel
-    @StateObject private var currentUser = CurrentUserManager.shared
+    @ObservedObject private var currentUser = CurrentUserManager.shared
+
     @State private var showReviews = false
     @State private var showCart = false
-
-    var fromCart: Bool = false  // ✅ NEW
+    var fromCart: Bool = false
 
     init(book: Book, fromCart: Bool = false) {
         _viewModel = StateObject(wrappedValue: BookDetailViewModel(book: book))
@@ -123,7 +116,6 @@ struct BookDetailsView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            currentUser.loadUser()
             viewModel.checkIfInWishlist()
             viewModel.quantity = 0
             viewModel.loadQuantityFromCart()

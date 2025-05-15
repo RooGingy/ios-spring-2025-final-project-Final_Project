@@ -12,7 +12,7 @@ struct MainTabView: View {
     @State private var selectedTab: Tab = .home
 
     enum Tab {
-        case home, cart, wishlist, orders
+        case home, cart, wishlist, orders, profile
     }
 
     var body: some View {
@@ -25,7 +25,9 @@ struct MainTabView: View {
             case .wishlist:
                 WishlistView()
             case .orders:
-                OrderHistoryView() // 👈 Replaced placeholder with real view
+                OrderHistoryView()
+            case .profile:
+                ProfileView()
             }
 
             Navbar(selectedTab: $selectedTab)
